@@ -4,7 +4,7 @@ class Member extends CI_Controller{
 
 	public function index(){
 
-		echo "Test";
+		$this->load->view("register_form");
 	}
 
 	public function registration(){
