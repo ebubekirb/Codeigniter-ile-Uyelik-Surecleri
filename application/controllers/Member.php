@@ -72,7 +72,7 @@ class Member extends CI_Controller{
 
 				$link = base_url("member/activation/$activation_code");
 
-				$message = "Merhabalar, {$this->input->post("full_name")}, <br> üyeliğinizin aktifleşmesi için sadece bir adım kaldı üyeliğinizi aktifleştirmek için lütfen <a href='$link'>tıklayınız</a>";
+				$message = "Merhabalar, {$this->input->post("full_name")}, <br> Üyeliğinizin aktifleşmesi için sadece bir adım kaldı üyeliğinizi aktifleştirmek için lütfen <a href='$link'>tıklayınız...</a>";
 
 				$this->load->library("email", $config);
 
@@ -85,10 +85,12 @@ class Member extends CI_Controller{
 
 				if ($send) {
 					
-					echo "İşlem başarılıdır";
+					$this->load->view("thanks");
+
 				} else {
 					
-					echo "İşlem başarısızdır";
+					$viewData["error"] = "Üyelik sırasında bir problem oluştu. Lütfen tekrar deneyiniz.";
+					$this->load->view("register_form", $viewData);
 				}
 				
 
@@ -97,15 +99,58 @@ class Member extends CI_Controller{
 				// email gonderimi..
 			} else{
 
-				// Error Page
-				echo "başarısızdır";
+				$viewData["error"] = "Üyelik sırasında bir problem oluştu. Lütfen tekrar deneyiniz.";
+				$this->load->view("register_form", $viewData);
 			}
 		}
 	}
 
-	public function activation(){
+	public function activation($id){
 
+
+		//activation code ile kaydi bul..
+		//bu kayda ait isActive => 1
+		//activation_code=""
+		//başarılı sayfası
+
+		$this->load->model("Member_model");
+
+		$where = array(
+
+			"activation_code" => $id
+		);
+
+		$row = $this->Member_model->get($where);
+
+		if ($row) {
+			
+			$data = array(
+
+				"isActive" 			=> 1,
+				"activation_code" 	=> 0
+			);
+
+
+			$update = $this->Member_model->update($where, $data);
+
+			if ($update) {
+				
+				$this->load->view("success");
+
+			} else {
+				
+				$this->load->view("error");
+			}
+			
+
+		} else {
+			
+			$this->load->view("error");
+		}
 		
+
+		//else
+		//error page
 	}
 }
 
