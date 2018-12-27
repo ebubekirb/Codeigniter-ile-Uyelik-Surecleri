@@ -10,13 +10,27 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </head>
 
-    <body style="background-color: darkcyan">
-		<br>
+    <body style="background-color: darkcyan" class="blue-grey lighten-4">
+
+      <?php if (isset($error)) { ?>
+        <div class="container">
+          <div class="row">
+            <div class="col s6 offset-s3">
+              <div class="card-panel red white-text center-align pulse">
+                <?php echo $error; ?>
+              </div>
+            </div>
+          </div>  
+        </div>  
+      <?php } ?>
+
+      
+
     	<div class="container">
     		<div class="row">
     			<div class="col s6 offset-s3">
     				<div class="card-panel light">
-              <form action="">
+              <form action="<?php echo base_url("member/registration") ?>" method="post">
                 <div class="input-field">
                   <input type="text" name="full_name">
                   <label>Ad Soyad</label>
@@ -47,7 +61,7 @@
                 </div>
 
                 <div class="input-field">
-                  <input type="password" name="password">
+                  <input type="password" name="re_password">
                   <label>Tekrar Şifre</label>
                 </div>
 
