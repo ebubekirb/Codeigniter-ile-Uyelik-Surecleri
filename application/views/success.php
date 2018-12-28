@@ -14,7 +14,7 @@
 	<br>
   <div class="container">
     <div class="row">
-        <div class="col s5 offset-s3">
+        <div class="col s4 offset-s4">
           <div class="card green">
             <div class="center-align card-content white-text">
               <span class="card-title"><strong>Kayıt İşlemi Başarılı!!</strong></span>

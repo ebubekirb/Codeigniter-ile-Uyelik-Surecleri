@@ -152,6 +152,14 @@ class Member extends CI_Controller{
 		//else
 		//error page
 	}
+
+
+	/*	Üyelik İşlemleri 2	*/
+
+	public function signin_form(){
+
+		$this->load->view("signin");
+	}
 }
 
  ?>
