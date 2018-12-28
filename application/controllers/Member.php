@@ -8,6 +8,7 @@ class Member extends CI_Controller{
 
 		$this->load->library("form_validation");
 		$this->load->model("Member_model");
+		$this->load->helper("cookie");
 	}
 
 	public function index(){
@@ -232,6 +233,29 @@ class Member extends CI_Controller{
 			if ($member) {
 
 				$this->session->set_userdata("member", $member);
+
+				// Beni hatirla...
+				if ($this->input->post("remember_me") == "on") {
+					
+					// cookie deger set et
+
+					$remember_me = array(
+  						
+  						"email" 	=> $this->input->post("email"),
+  						"password" 	=> $this->input->post("password")
+					);
+
+					// set_cookie(key, value, time);
+
+					set_cookie("remember_me", json_encode($remember_me), time() + 60*60*24*30 );
+
+				} else {
+					
+					// cookie degeri sil...
+
+					delete_cookie("remember_me");
+				}
+				
 
 				redirect(base_url("homepage"));
 

@@ -25,6 +25,22 @@
   <?php } ?>
 
 
+  <?php 
+  // Beni Hatirla icin gerekli olan cookie islemleri
+
+  $this->load->helper("cookie");
+
+  $remember_me = get_cookie("remember_me");
+
+  if ($remember_me) {
+    
+    $member = json_decode($remember_me);
+
+  } 
+  
+  ?>
+
+
   <div class="container">
     <div class="row">
      <div class="col s6 offset-s3">
@@ -33,14 +49,14 @@
 
           <div class="row">
             <div class="input-field col s12">
-              <input type="email" name="email">
+              <input type="email" name="email" value="<?php echo (isset($member)) ? $member->email : ""; ?>">
               <label>E-posta Adresi</label>
             </div>
           </div>
 
           <div class="row">
             <div class="input-field col s12">
-              <input type="password" name="password">
+              <input type="password" name="password" value="<?php echo (isset($member)) ? $member->password : ""; ?>">
               <label>Şifre</label>
             </div>
           </div>
@@ -48,7 +64,7 @@
 
           <div class="row">
             <label>
-              <input type="checkbox" id="remember_me" name="remember_me" />
+              <input type="checkbox" id="remember_me" name="remember_me" <?php echo (isset($member)) ? "checked" : ""; ?> />
               <span>Beni Hatırla</span>  
             </label>             
           </div>
