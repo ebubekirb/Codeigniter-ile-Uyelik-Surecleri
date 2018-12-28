@@ -45,8 +45,6 @@ class Member extends CI_Controller{
 
 		} else{
 			
-			$this->load->model("Member_model");
-
 			$activation_code = md5(uniqid());
 
 			$data = array(
@@ -240,9 +238,9 @@ class Member extends CI_Controller{
 					// cookie deger set et
 
 					$remember_me = array(
-  						
-  						"email" 	=> $this->input->post("email"),
-  						"password" 	=> $this->input->post("password")
+
+						"email" 	=> $this->input->post("email"),
+						"password" 	=> $this->input->post("password")
 					);
 
 					// set_cookie(key, value, time);
@@ -274,6 +272,102 @@ class Member extends CI_Controller{
 
 		$this->session->unset_userdata("member");
 		redirect(base_url("member/signin_form"));
+	}
+
+
+
+	public function forgot_password(){
+
+		$this->form_validation->set_rules("email", "E-posta", "trim|required|valid_email");
+		$error_messages = array(
+
+			"required"     	=> "<strong>E-posta</strong> alanı doldurmak zorundasınız!!",
+			"valid_email"  	=> "Lütfen geçerli bir e-posta adresi giriniz!!"
+		);
+
+		$this->form_validation->set_message($error_messages);
+
+		if ($this->form_validation->run() == FALSE) {
+			
+			$viewData["error"] = validation_errors();
+			$this->load->view("signin", $viewData);
+
+		} else{
+
+			$email = $this->input->post("email");
+
+			$where = array(
+
+				"email" 	=> $email,
+				"isActive" 	=> 1
+			);
+
+			$member = $this->Member_model->get($where);
+
+
+			$activation_code = md5(uniqid());
+
+			if ($member) {
+
+				$data = array(
+
+					"password" 		=> ""
+				);
+
+				$update = $this->Member_model->update($where, $data);
+
+				if($update){
+
+					$config = array(
+
+						"protocol" 		=> "smtp",
+						"smtp_host" 	=> "ssl://smtp.gmail.com",
+						"smtp_port" 	=> "465",
+						"smtp_pass" 	=> "549385_:",
+						"smtp_user" 	=> "ebubekr385@gmail.com",
+						"starttls" 		=> "true",
+						"charset" 		=> "utf8",
+						"mailtype" 		=> "html",
+						"wordwrap" 		=> "true",
+						"newline" 		=> "\r\n"
+					);
+
+					$link = base_url("member/activation/$activation_code");
+
+					$message = "Merhabalar, {$member->full_name}, <br> Şifrenizin sıfırlanma işlemi için sadece bir adım kaldı şifrenizi sıfırlamak için lütfen <a href='$link'>tıklayınız...</a>";
+
+					$this->load->library("email", $config);
+
+					$this->email->from("ebubekr385@gmail.com", "Ebubekir Bingöloğlu");
+					$this->email->to($this->input->post("email"));
+					$this->email->subject("Üyelik Aktivasyonu");
+					$this->email->message($message);
+
+					$send = $this->email->send();
+
+					if ($send) {
+
+						$this->load->view("thanks");
+
+					} else {
+
+						$viewData["error"] = "Üyelik sırasında bir problem oluştu. Lütfen tekrar deneyiniz.";
+						$this->load->view("signin", $viewData);
+					}
+
+				}
+				
+				
+
+				// Kullanıcıya Aktivasyon işlemi icin email at...
+				// email gonderimi..
+			} else{
+
+				$viewData["error"] = "Girmiş olduğunuz e-posta adresine ait bir kayıt bulunamadı!!!";
+				$this->load->view("signin", $viewData);
+			}
+			
+		}
 	}
 }
 

@@ -91,7 +91,7 @@
     <h4>Şifremi Unuttum</h4>
     <p>Şifrenizi hatırlatmak için size yeni bir şifre oluşturup göndereceğiz. Bunun için sistemde kayıtlı olan <br> e-posta adresinizi giriniz.</p>
 
-    <form action="<?php echo base_url('member/') ?>" method="post">
+    <form action="<?php echo base_url('member/forgot_password') ?>" method="post">
       <div class="row">
         <div class="input-field col s12">
           <input type="email" id="email" name="email" placeholder="Sistemde kayıtlı e-posta adresiniz...">
