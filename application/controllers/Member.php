@@ -163,11 +163,34 @@ class Member extends CI_Controller{
 
 	public function signin_form(){
 
-		$this->load->view("signin");
+		$member = $this->session->userdata("member");
+
+		if ($member) {
+
+			redirect(base_url("homepage"));
+
+
+		} else {
+
+			$this->load->view("signin");
+		}
+
 	}
 
 
 	public function signin(){
+
+		$member = $this->session->userdata("member");
+
+		if ($member) {
+
+			redirect(base_url("homepage"));
+
+
+		} else {
+
+			$this->load->view("signin");
+		}
 
 		// form validation
 			// db kontrolu
@@ -207,7 +230,9 @@ class Member extends CI_Controller{
 			$member = $this->Member_model->get($where);
 
 			if ($member) {
-				
+
+				$this->session->set_userdata("member", $member);
+
 				redirect(base_url("homepage"));
 
 			} else {
@@ -219,6 +244,13 @@ class Member extends CI_Controller{
 		}	
 
 	}
+
+
+	public function logout(){
+
+		$this->session->unset_userdata("member");
+		redirect(base_url("member/signin_form"));
+	}
 }
 
- ?>
+?>

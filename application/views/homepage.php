@@ -15,16 +15,16 @@
   <nav>
     <div class="nav-wrapper">
       <ul id="nav-mobile" class="left hide-on-med-and-down">
-        <li><a href="#">Çıkış Yap <i class="material-icons right">exit_to_app</i></a></li>
+        <li><a href="<?php echo base_url("member/logout"); ?>">Çıkış Yap <i class="material-icons right">exit_to_app</i></a></li>
       </ul>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <li><a href="#">Ebubekir Bingöloğlu <i class="material-icons right"></i></a></li>
       </ul>
     </div>
   </nav>
-
+  <?php $member = $this->session->userdata("member"); ?>
   <div class="container section">
-    Hoşgeldiniz, <strong>Ebubekir Bingöloğlu</strong>
+    Hoşgeldiniz, <strong><?php echo $member->full_name; ?></strong>
   </div>
 
 
