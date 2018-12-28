@@ -23,13 +23,12 @@
         </div>  
       <?php } ?>
 
-      <br>      
 
       <div class="container">
         <div class="row">
          <div class="col s6 offset-s3">
           <div class="card-panel light">
-            <form action="<?php echo base_url("member/registration") ?>" method="post">
+            <form action="<?php echo base_url('member/signin') ?>" method="post">
 
               <div class="row">
                 <div class="input-field col s12">
@@ -63,11 +62,11 @@
                 </a>
               </div>
 
-              </form>
-            </div>
-    			</div>
-    		</div>
-    	</div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
       <!-- Modal Structure -->
       <div id="forgot_pass_modal" class="modal">
@@ -87,12 +86,7 @@
               <button type="submit" class="modal-close waves-effect waves-green btn-flat"><i class="material-icons left">send</i>Gönder</button>
             </div>
           </form>
-
-
         </div>
-
-
-        
       </div>
 
       <!--JavaScript at end of body for optimized loading-->

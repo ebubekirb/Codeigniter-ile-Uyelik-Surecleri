@@ -2,6 +2,14 @@
 
 class Member extends CI_Controller{
 
+	public function __construct(){
+
+		parent::__construct();
+
+		$this->load->library("form_validation");
+		$this->load->model("Member_model");
+	}
+
 	public function index(){
 
 		$this->load->view("register_form");
@@ -9,7 +17,6 @@ class Member extends CI_Controller{
 
 	public function registration(){
 
-		$this->load->library("form_validation");
 
 		$this->form_validation->set_rules("full_name", "Ad Soyad", "trim|required|min_length[3]");
 		$this->form_validation->set_rules("email", "E-posta", "trim|required|valid_email|is_unique[member.email]");
@@ -113,8 +120,6 @@ class Member extends CI_Controller{
 		//activation_code=""
 		//başarılı sayfası
 
-		$this->load->model("Member_model");
-
 		$where = array(
 
 			"activation_code" => $id
@@ -159,6 +164,60 @@ class Member extends CI_Controller{
 	public function signin_form(){
 
 		$this->load->view("signin");
+	}
+
+
+	public function signin(){
+
+		// form validation
+			// db kontrolu
+				// homepage gonder
+			// else
+				// hata sayfası
+		// else
+			// hata mesajlarini gostererek signin sayfasini gostermek...
+
+
+		$this->form_validation->set_rules("email", "E-posta", "trim|required|valid_email");
+		$this->form_validation->set_rules("password", "Şifre", "trim|required|min_length[6]");
+
+		$error_messages = array(
+
+			"required"     	=> "<strong>{field}</strong> alanı doldurmak zorundasınız!!",
+			"valid_email"  	=> "Lütfen geçerli bir e-posta adresi giriniz!!",
+			"min_length"	=> "Lütfen şifrenizi eksiksiz olarak giriniz!!"
+		);
+
+		$this->form_validation->set_message($error_messages);	
+
+		if ($this->form_validation->run() == FALSE) {
+			
+			$viewData["error"] = validation_errors();
+			$this->load->view("signin", $viewData);
+
+		} else{
+
+
+			$where = array(
+
+				"email" 	=> $this->input->post("email"),
+				"password" 	=> md5($this->input->post("password"))
+			);
+
+			$member = $this->Member_model->get($where);
+
+			if ($member) {
+				
+				redirect(base_url("homepage"));
+
+			} else {
+				
+				$viewData["error"] = "Girmiş olduğunuz bilgilere ait bir kullanıcı bulunamadı!!";
+				$this->load->view("signin", $viewData);
+			}
+			
+		}	
+
 	}
 }
 
