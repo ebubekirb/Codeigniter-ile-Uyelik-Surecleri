@@ -305,59 +305,70 @@ class Member extends CI_Controller{
 			$member = $this->Member_model->get($where);
 
 
-			$activation_code = md5(uniqid());
-
 			if ($member) {
 
-				$data = array(
+				$change_request_code = md5(uniqid());
 
-					"password" 		=> ""
+
+				$config = array(
+
+					"protocol" 		=> "smtp",
+					"smtp_host" 	=> "ssl://smtp.gmail.com",
+					"smtp_port" 	=> "465",
+					"smtp_pass" 	=> "549385_:",
+					"smtp_user" 	=> "ebubekr385@gmail.com",
+					"starttls" 		=> "true",
+					"charset" 		=> "utf8",
+					"mailtype" 		=> "html",
+					"wordwrap" 		=> "true",
+					"newline" 		=> "\r\n"
 				);
 
-				$update = $this->Member_model->update($where, $data);
+				$link = base_url("member/forgot_pass_confirm/$change_request_code");
 
-				if($update){
+				$message = "Merhabalar, {$member->full_name}, <br> Şifrenizi sıfırlanma talebiniz alındı... Şifrenizi sıfırlamak için lütfen <a href='$link'>tıklayınız...</a>";
 
-					$config = array(
+				$this->load->library("email", $config);
 
-						"protocol" 		=> "smtp",
-						"smtp_host" 	=> "ssl://smtp.gmail.com",
-						"smtp_port" 	=> "465",
-						"smtp_pass" 	=> "549385_:",
-						"smtp_user" 	=> "ebubekr385@gmail.com",
-						"starttls" 		=> "true",
-						"charset" 		=> "utf8",
-						"mailtype" 		=> "html",
-						"wordwrap" 		=> "true",
-						"newline" 		=> "\r\n"
+				$this->email->from("ebubekr385@gmail.com", "Ebubekir Bingöloğlu");
+				$this->email->to($this->input->post("email"));
+				$this->email->subject("Şifre Sıfırlama");
+				$this->email->message($message);
+
+				$send = $this->email->send();
+
+				if ($send) {
+
+					$where = array(
+
+						"id"	=> $member->id
 					);
 
-					$link = base_url("member/activation/$activation_code");
+					$data = array(
 
-					$message = "Merhabalar, {$member->full_name}, <br> Şifrenizin sıfırlanma işlemi için sadece bir adım kaldı şifrenizi sıfırlamak için lütfen <a href='$link'>tıklayınız...</a>";
+						"activation_code"	=> $change_request_code
+					);
 
-					$this->load->library("email", $config);
 
-					$this->email->from("ebubekr385@gmail.com", "Ebubekir Bingöloğlu");
-					$this->email->to($this->input->post("email"));
-					$this->email->subject("Üyelik Aktivasyonu");
-					$this->email->message($message);
+					$update = $this->Member_model->update($where, $data);
 
-					$send = $this->email->send();
+					if ($update) {
 
-					if ($send) {
-
-						$this->load->view("thanks");
+						echo "başarılıdır";
 
 					} else {
 
-						$viewData["error"] = "Üyelik sırasında bir problem oluştu. Lütfen tekrar deneyiniz.";
+						$viewData["error"] = "Şifre sıfırlama sırasında bir problem oluştu lütfen tekrar deneyiniz!!!";
 						$this->load->view("signin", $viewData);
 					}
 
+
+				} else {
+
+					$viewData["error"] = "Şifre sıfırlama sırasında bir problem oluştu lütfen tekrar deneyiniz!!!";
+					$this->load->view("signin", $viewData);
 				}
-				
-				
+
 
 				// Kullanıcıya Aktivasyon işlemi icin email at...
 				// email gonderimi..
@@ -368,6 +379,12 @@ class Member extends CI_Controller{
 			}
 			
 		}
+	}
+
+
+	public function forgot_pass_confirm(){
+
+
 	}
 }
 
