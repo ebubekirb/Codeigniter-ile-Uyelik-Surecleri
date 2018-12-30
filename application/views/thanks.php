@@ -19,7 +19,7 @@
             <div class="center-align card-content white-text">
               <span class="card-title"><strong>Kayıt İşlemi Başarılı!!</strong></span>
               <i class="large material-icons">beenhere</i>
-              <p>Kayıt İşlemi Başarılıdır. Kaydınızın aktif olabilmesi için size mail gönderdik. Lütfen posta kutunuza gidip. Üyeliğinizi aktifleştiriniz.</p>
+              <p><?php echo $message ?></p>
             </div>
           </div>
         </div>

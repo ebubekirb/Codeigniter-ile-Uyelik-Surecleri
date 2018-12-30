@@ -90,8 +90,10 @@ class Member extends CI_Controller{
 				$send = $this->email->send();
 
 				if ($send) {
+
+					$viewData["message"] = "Kayıt İşlemi Başarılıdır. Kaydınızın aktif olabilmesi için size mail gönderdik. Lütfen posta kutunuza gidip. Üyeliğinizi aktifleştiriniz.";
 					
-					$this->load->view("thanks");
+					$this->load->view("thanks", $viewData);
 
 				} else {
 					
@@ -131,7 +133,7 @@ class Member extends CI_Controller{
 			$data = array(
 
 				"isActive" 			=> 1,
-				"activation_code" 	=> 0
+				"activation_code" 	=> ""
 			);
 
 
@@ -354,7 +356,9 @@ class Member extends CI_Controller{
 
 					if ($update) {
 
-						echo "başarılıdır";
+						$viewData["message"] = "Şifre sıfırlama işlemi başarılıdır. Şifrenizi değiştirebilmeniz için size mail gönderdik. Lütfen posta kutunuza gidip. Şifrenizi sıfırlayınız.";
+
+						$this->load->view("thanks", $viewData);
 
 					} else {
 
