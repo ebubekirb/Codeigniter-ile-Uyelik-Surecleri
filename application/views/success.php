@@ -17,9 +17,9 @@
         <div class="col s4 offset-s4">
           <div class="card green">
             <div class="center-align card-content white-text">
-              <span class="card-title"><strong>Kayıt İşlemi Başarılı!!</strong></span>
               <i class="large material-icons">mood</i>
-              <p>Üyeliğiniz başarılı bir şekilde aktifleştirilmiştir.</p>
+              <span class="card-title"><strong>İşlem Başarılı!!</strong></span>
+              <p><?php echo $message; ?></p>
             </div>
           </div>
         </div>

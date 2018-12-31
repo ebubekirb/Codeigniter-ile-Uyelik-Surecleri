@@ -11,7 +11,7 @@
 </head>
 
 <body style="background-color: darkcyan" class="blue-grey lighten-4">
-  <br>
+  <!-- <br> -->
   <?php if (isset($error)) { ?>
     <div class="container">
       <div class="row">

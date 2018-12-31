@@ -140,12 +140,16 @@ class Member extends CI_Controller{
 			$update = $this->Member_model->update($where, $data);
 
 			if ($update) {
+
+				$viewData["message"] = "Üyeliğiniz başarılı bir şekilde aktifleştirilmiştir.";
 				
-				$this->load->view("success");
+				$this->load->view("success", $viewData);
 
 			} else {
+
+				$viewData["error"] ="Bu aktivasyon koduna ait herhangi bir kayıt bulunamadı!";
 				
-				$this->load->view("error");
+				$this->load->view("error", $viewData);
 			}
 			
 
@@ -164,6 +168,14 @@ class Member extends CI_Controller{
 
 	public function signin_form(){
 
+		// form validation
+			// db kontrolu
+				// homepage gonder
+			// else
+				// hata sayfası
+		// else
+			// hata mesajlarini gostererek signin sayfasini gostermek...
+
 		$member = $this->session->userdata("member");
 
 		if ($member) {
@@ -180,26 +192,6 @@ class Member extends CI_Controller{
 
 
 	public function signin(){
-
-		$member = $this->session->userdata("member");
-
-		if ($member) {
-
-			redirect(base_url("homepage"));
-
-
-		} else {
-
-			$this->load->view("signin");
-		}
-
-		// form validation
-			// db kontrolu
-				// homepage gonder
-			// else
-				// hata sayfası
-		// else
-			// hata mesajlarini gostererek signin sayfasini gostermek...
 
 
 		$this->form_validation->set_rules("email", "E-posta", "trim|required|valid_email");
@@ -386,9 +378,98 @@ class Member extends CI_Controller{
 	}
 
 
-	public function forgot_pass_confirm(){
+	public function forgot_pass_confirm($code){
+
+		$where = array(
+
+			"activation_code" 	=> $code
+		);
+
+		$member = $this->Member_model->get($where);
+
+		$viewData["code"] = $code;
+
+		if ($member) {
+
+		$this->load->view("password_change_form", $viewData);
+			
+		} else {
+			
+			$viewData["error"] ="Aradağınız sayfa silinmiş veya yayından kaldırılmış olabilir!";
+
+			$this->load->view("error", $viewData);
+		}
+	}
 
 
+	public function password_change($code){
+
+		$this->form_validation->set_rules("password", "Şifre", "required|trim|min_length[6]");
+		$this->form_validation->set_rules("re_password", "Şifre Doğrulama", "trim|required|min_length[6]|matches[password]");
+
+		$error_messages = array(
+
+			"required"		=> "%s alanını girmelisiniz!!!",
+			"min_length"	=> "Lütfen şifrenizi eksiksiz olarak giriniz!!!"
+		);
+
+		$this->form_validation->set_message("error_messages");
+
+		if ($this->form_validation->run() == FALSE) {
+			
+
+			redirect(base_url("member/forgot_pass_confirm/$code"));
+			
+
+		} else {
+
+
+
+			$where = array(
+         		
+         		"activation_code"	=> $code,
+         		"isActive"			=> 1
+			);
+
+			$member = $this->Member_model->get($where);
+
+			if ($member) {
+				
+				// update...
+
+				$where = array(
+                	
+                	"activation_code"	=> $code
+				);
+
+				$data = array(
+
+					"password"			=> md5($this->input->post("password")),
+					"activation_code" 	=> ""
+				);
+
+
+				$update = $this->Member_model->update($where, $data);
+
+				if ($update) {
+					
+					$viewData["message"] = "Şifrenizi başarılı bir şekilde değiştirilmiştir.. Giriş yapmak için <a style ='color:white;' href='".base_url("member/signin_form")."'>tıklayınız</a>";
+
+					$this->load->view("success", $viewData);
+
+				} else {
+					
+					redirect(base_url("member/forgot_pass_confirm/$code"));
+				}
+				
+
+			} else {
+				
+				redirect(base_url("member/forgot_pass_confirm/$code"));
+			}
+			
+		}
+		
 	}
 }
 

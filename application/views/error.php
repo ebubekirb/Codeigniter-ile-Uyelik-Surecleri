@@ -17,9 +17,9 @@
         <div class="col s4 offset-s4">
           <div class="card red">
             <div class="center-align card-content white-text">
-              <span class="card-title"><strong>Kayıt İşleminde Hata Oluştu!!</strong></span>
               <i class="large material-icons">mood_bad</i>
-              <p>Bu aktivasyon koduna ait herhangi bir kayıt bulunamadı!</p>
+              <span class="card-title"><strong>İşlem Sırasında Hata Oluştu!!</strong></span>
+              <p><?php echo $error; ?></p>
             </div>
           </div>
         </div>
